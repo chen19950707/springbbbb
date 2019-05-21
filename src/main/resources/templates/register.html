@@ -1,0 +1,233 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>注册</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <LINK rel="Bookmark" href="static/favicon.png">
+    <LINK rel="Shortcut Icon" href="static/favicon.png"/>
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="static/staticRes/js/html5shiv.js"></script>
+    <script type="text/javascript" src="static/staticRes/js/respond.min.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" type="text/css" href="static/plugin/h-ui/css/H-ui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="static/plugin/Hui-iconfont/1.0.8/iconfont.min.css"/>
+    <link rel="stylesheet" type="text/css" href="static/css/common.css"/>
+    <link rel="stylesheet" type="text/css" href="static/css/login.css"/>
+    <link rel="stylesheet" type="text/css" href="static/plugin/pifu/pifu.css"/>
+    <!--[if lt IE 9]>
+    <link href="static/staticRes/lib/h-ui/css/H-ui.ie.css" rel="stylesheet" type="text/css"/>
+    <![endif]-->
+    <script type="application/x-javascript"> addEventListener("load", function () {
+        setTimeout(hideURLbar, 0);
+    }, false);
+
+    function hideURLbar() {
+        window.scrollTo(0, 1);
+    }
+
+    function showSide() {
+        $('.navbar-nav').toggle();
+    }</script>
+</head>
+<body>
+<header class="navbar-wrapper">
+    <div class="navbar navbar-fixed-top">
+        <div class="container cl">
+            <a class="navbar-logo hidden-xs" href="index.html">
+                <img class="logo" src="static/img/logo.png"/>
+            </a>
+            <a class="logo navbar-logo-m visible-xs" href="index.html">My Blog</a>
+            <a aria-hidden="false" class="nav-toggle Hui-iconfont visible-xs" href="javascript:void(0);"
+               onclick="showSide();">&#xe667;</a>
+            <nav class="nav navbar-nav nav-collapse w_menu" role="navigation">
+                <ul class="cl">
+                    <li class="active"><a>注册</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</header>
+<div id="rbody">
+    <img id="reimg" src="static/img/zhuce.png"/>
+    <table>
+        <tr>
+            <td>用户名:</td>
+            <td><input id="username" required="required" type="text" placeholder="用户名为6-12位字母数字" autocomplete="off"/><span id="nametip">该用户名已被注册</span>
+            </td>
+        </tr>
+        <tr>
+            <td>密码:</td>
+            <td><input id="pwd" required="required" type="password" placeholder="密码最少12位字母数字" autocomplete="off"/><span
+                    id="pwdtip">密码最少12位</span></td>
+        </tr>
+        <tr>
+            <td>重复密码:</td>
+            <td><input id="rpwd" required="required" type="password" placeholder="请重复输入密码" autocomplete="off"/><span
+                    id="rpwdtip">密码不一致</span></td>
+        </tr>
+        <tr>
+            <td>邮箱:</td>
+            <td><input id="mail" required="required" type="email" placeholder="邮箱地址" autocomplete="off"/></td>
+            <td style="width: 120px">
+                <button id="sendCode" >发送验证码</button>
+            </td>
+        </tr>
+        <tr>
+            <td>邮箱验证码:</td>
+            <td><input id="code" required="required" type="text" placeholder="请输入验证码" autocomplete="off"><span id="codtip">验证码错误</span></td>
+        </tr>
+    </table>
+    <button id="rbutton">确认注册</button>
+</div>
+<span id="ti" th:text="${session.time}" style="display: none"></span>
+</body>
+<script type="text/javascript" src="static/plugin/jquery/1.9.1/jquery.min.js"></script>
+<script>
+    var thread="";
+    var flag="";
+    $(function () {
+        if($("#ti").text()){
+            $("#sendCode").off("click")
+            thread = setInterval("sendsec()",1000)
+        }
+    })
+    $("#rbutton").on("click",function () {
+        if(flag=="true"){
+            $.ajax({
+                url:"util/login",
+                dataType:"text",
+                data:{
+                    name:$("#username").val(),
+                    pwd:$("#pwd").val(),
+                    mail:$("#mail").val(),
+                    code: $("#code").val()
+                },
+                success:function (data) {
+                    if(data=="true"){
+                        window.location.href="login"
+                    }else if(data=="err"){
+                        alert("错误")
+                    }else{
+                        $("#codtip").prop("style","display:inline-block")
+                        $("#codtip").text("验证码错误!")
+                    }
+                }
+            })
+        }
+    })
+    $("#username").on("focus", function () {
+        $("#nametip").prop("style", "display:none")
+    });
+    $("#username").on("blur", checkname);
+
+    function checkname() {
+        var str = /^\w{6,12}$/;
+        if (!str.test($("#username").val())) {
+            $("#nametip").text("用户名格式错误");
+            $("#nametip").prop("style", "display:inline-block")
+            return "false";
+        }else{
+            $.ajax({
+                url:"util/checkname",
+                type:"post",
+                dataType:"text",
+                data:{
+                    name:$("#username").val()
+                },
+                async:false,
+                success:function (data) {
+                    flag=data;
+                    if(data=="false"){
+                        $("#nametip").text("用户名已被占用");
+                        $("#nametip").prop("style", "display:inline-block")
+                    }
+                }
+            })
+        }
+    }
+
+    $("#pwd").on("focus", function () {
+        $("#pwdtip").prop("style", "display:none")
+    });
+    $("#pwd").on("blur", checkpwd);
+
+    function checkpwd() {
+        var str = /^\w{6,12}$/;
+        if (!str.test($("#pwd").val())) {
+            $("#pwdtip").text("密码格式错误");
+            $("#pwdtip").prop("style", "display:inline-block")
+            return false;
+        }
+    }
+
+    $("#rpwd").on("focus", function () {
+        $("#rpwdtip").prop("style", "display:none")
+    });
+    $("#rpwd").on("blur", checkrpwd);
+
+    function checkrpwd() {
+        var str = /^\w{6,12}$/;
+        if (!str.test($("#rpwd").val())) {
+            $("#rpwdtip").text("密码不一致错误");
+            $("#rpwdtip").prop("style", "display:inline-block")
+            return false;
+        }
+    }
+
+    $("#code").on("focus", function () {
+        $("#codtip").prop("style", "display:none")
+    });
+
+    $("#sendCode").on("click", sendcode)
+
+    function sendcode() {
+        var str = /^\w+@\w+\.\w+$/
+        if (str.test($("#mail").val())) {
+            $.ajax({
+                type: "post",
+                url: "util/sendCode",
+                dataType: "text",
+                data: {
+                    mail: $("#mail").val()
+                },
+                success: function (data) {
+                    if(data=="true"){
+                        $("#sendCode").off("click")
+                        $("#sendCode").text("发送成功!")
+                        thread = setInterval("sendsec()",1000)
+                    }else{
+                        $("#sendCode").off("click")
+                        $("#sendCode").text("该邮箱已注册!")
+                        setTimeout(registMail,1000)
+                    }
+                }
+            })
+        }
+    }
+    function registMail() {
+        $("#sendCode").on("click",sendcode)
+        $("#sendCode").text("发送验证码")
+    }
+    function sendsec() {
+        $.ajax({
+            url:"util/timee",
+            type:"post",
+            data:{
+                second:1
+            },
+            success:function (data) {
+                var data =parseInt(data);
+                $("#sendCode").text((data)+"秒后重新发送!")
+                if(data<=0){
+                    $("#sendCode").on("click",sendcode)
+                    $("#sendCode").text("发送验证码")
+                    clearInterval(thread)
+                }
+            }
+        })
+    }
+</script>
+</html>

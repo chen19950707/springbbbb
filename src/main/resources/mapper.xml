@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.UserDao">
+    <cache flushInterval="6000" eviction="FIFO"/>
+    <select id="getUser" resultMap="userLogin">
+        select * from user
+        <where>
+            <trim suffixOverrides="and">
+                <if test="name!=null and name!=''">
+                    username=#{name} and
+                </if>
+                <if test="pwd!=null and pwd!=''">
+                    pwd=#{pwd} and
+                </if>
+                <if test="mail!=null and mail!=''">
+                    mail=#{mail}
+                </if>
+            </trim>
+        </where>
+    </select>
+    <select id="checkName" resultType="string">
+        select username from user where username=#{name}
+    </select>
+    <insert id="saveUser" parameterType="com.pojo.user">
+        insert into user(username,pwd,mail) values (#{name},#{pwd},#{mail})
+    </insert>
+    <resultMap id="userLogin" type="com.pojo.user">
+        <result property="name" column="username"/>
+        <result property="pwd" column="pwd"/>
+        <result property="img" column="img"/>
+        <result property="id" column="id"/>
+    </resultMap>
+    <insert id="saveArticle" >
+        insert into article(tittle,content,time,type) values (#{tittle},#{content},#{time},#{type})
+    </insert>
+    <select id="getArticle" resultMap="articleMap">
+        select * from article
+        <where>
+            <if test="type!=null">
+                type=#{type}
+            </if>
+        </where>
+        order by time desc limit 0,#{num}
+    </select>
+    <resultMap id="articleMap" type="com.pojo.article">
+        <result property="tittle" column="tittle"/>
+        <result property="time" column="time"/>
+        <result property="content" column="content"/>
+        <result property="author" column="author"/>
+        <result property="pcount" column="pcount" />
+        <result property="rcount" column="rcount"/>
+        <result property="type" column="type"/>
+        <result property="id" column="aid"/>
+    </resultMap>
+    <select id="getHot" resultMap="articleMap">
+        select * from article order by rcount desc limit 0,5
+    </select>
+    <select id="getPoint" resultMap="articleMap">
+        select * from article order by pcount desc limit 0,10
+    </select>
+    <select id="getOneArticle" resultMap="articleMap">
+        select * from article where aid=#{id}
+    </select>
+    <select id="getPre" resultMap="articleMap">
+        select * from article where aid &lt; #{id} order by time desc limit 1
+    </select>
+    <select id="getNext" resultMap="articleMap">
+        select * from article where aid &gt; #{id} order by time limit 1
+    </select>
+    <insert id="setPoint" parameterType="integer">
+        update article set pcount=#{pcount} where aid=#{id}
+    </insert>
+    <insert id="setArticleReply" parameterType="integer">
+        update article set rcount=#{rcount} where aid=#{id}
+    </insert>
+
+    <insert id="setReply" parameterType="com.pojo.reply">
+        insert into reply(content,master,addr,time,masterimg,reid) values (#{content},#{master},#{addr},#{time},#{masterImg},#{reid})
+    </insert>
+    <select id="getReply" resultMap="replyMap" >
+        select * from reply where addr=#{addr} order by time desc limit 0,#{num}
+    </select>
+    <select id="getArticleReply" resultMap="replyMap">
+        select * from reply where reid=#{reid} order by time desc limit 0,#{num};
+    </select>
+    <resultMap id="replyMap" type="com.pojo.reply">
+        <result property="content" column="content"/>
+        <result property="master" column="master"/>
+        <result property="masterImg" column="masterimg"/>
+        <result property="time" column="time"/>
+        <result property="rid" column="rid"/>
+        <result property="reid" column="reid"/>
+        <collection property="inreply" column="rid" select="selectIn" ofType="com.pojo.reply">
+            <result property="content" column="content"/>
+            <result property="master" column="master"/>
+            <result property="masterImg" column="masterimg"/>
+            <result property="time" column="time"/>
+        </collection>
+    </resultMap>
+    <select id="selectIn" resultType="com.pojo.reply">
+        select * from reply where addr=cast(#{rid} as char);
+    </select>
+    <insert id="savePtittle" useGeneratedKeys="true" keyProperty="id" parameterType="com.pojo.photos">
+        insert into photos(tittle,time) values (#{tittle},#{time})
+    </insert>
+    <insert id="savePhoto" parameterType="com.pojo.photo">
+        insert into photo(url,tid) values (#{url},#{tid})
+    </insert>
+    <select id="getPhotos" parameterType="integer" resultMap="photosMap">
+        select * from photos order by id desc limit 0,#{num}
+    </select>
+    <resultMap id="photosMap" type="com.pojo.photos">
+        <result column="tittle" property="tittle"/>
+        <result column="time" property="time"/>
+        <result column="id" property="id"/>
+        <collection property="photo" column="id" ofType="com.pojo.photo" select="selectPhoto"/>
+    </resultMap>
+    <select id="selectPhoto" resultMap="photoMap">
+        select * from photo where tid=#{id}
+    </select>
+    <resultMap id="photoMap" type="com.pojo.photo">
+        <result column="url" property="url"/>
+    </resultMap>
+    <select id="getPtittles" resultType="com.pojo.photos">
+        select * from photos where tittle=#{tittle} and time=#{time}
+    </select>
+    <select id="getPhotoo" resultType="com.pojo.photos">
+        select * from photos where id=#{id}
+    </select>
+    <select id="getPhoto" resultType="com.pojo.photo">
+        select * from photo where tid=#{id}
+    </select>
+</mapper>

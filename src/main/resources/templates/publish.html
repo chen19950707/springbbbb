@@ -1,0 +1,171 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<title>发表文章</title>
+<meta charset="utf-8">
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<LINK rel="Bookmark" href="static/img/favicon.ico" >
+<LINK rel="Shortcut Icon" href="static/img/favicon.ico" />
+<!--[if lt IE 9]>
+<script type="text/javascript" src="static/staticRes/js/html5shiv.js"></script>
+<script type="text/javascript" src="static/staticRes/js/respond.min.js"></script>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="static/plugin/h-ui/css/H-ui.min.css" />
+<link rel="stylesheet" type="text/css" href="static/plugin/Hui-iconfont/1.0.8/iconfont.min.css" />
+<link rel="stylesheet" type="text/css" href="static/css/common.css" />
+<link rel="stylesheet" type="text/css" href="static/css/login.css"/>
+<link rel="stylesheet" type="text/css" href="static/plugin/pifu/pifu.css" />
+<link rel="stylesheet" type="text/css" href="static/plugin/wangEditor/css/wangEditor.min.css">
+<script type="text/javascript" charset="utf-8" src="static/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" charset="utf-8" src="static/ueditor/ueditor.all.min.js"></script>
+<script type="text/javascript" charset="utf-8" src="static/ueditor/lang/zh-cn/zh-cn.js"></script>
+<!--[if lt IE 9]>
+<link href="static/staticRes/lib/h-ui/css/H-ui.ie.css" rel="stylesheet" type="text/css" />
+<![endif]-->
+<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } function showSide(){$('.navbar-nav').toggle();}</script>
+</head>
+<body>
+<header class="navbar-wrapper">
+    <div class="navbar navbar-fixed-top">
+        <div class="container cl">
+            <a class="navbar-logo hidden-xs" href="index.html">
+                <img class="logo" src="static/img/logo.png" />
+            </a>
+            <a class="logo navbar-logo-m visible-xs" href="index.html">My Blog</a>
+            <a aria-hidden="false" class="nav-toggle Hui-iconfont visible-xs" href="javascript:void(0);"
+               onclick="showSide();">&#xe667;</a>
+            <nav class="nav navbar-nav nav-collapse w_menu" role="navigation">
+                <ul class="cl">
+                    <li class="active"><a href="index" data-hover="首页">首页</a></li>
+                    <li><a href="about" data-hover="关于我">关于我</a></li>
+                    <li><a href="album" data-hover="相册">相册</a></li>
+                    <li><a href="article" data-hover="学无止尽">学无止尽</a></li>
+                    <li><a href="board" data-hover="留言板">留言板</a></li>
+                    <li th:if="${session.user != null && session.user.name=='admin'}" ><a href="publish" data-hover="发表">发表</a></li>
+                </ul>
+            </nav>
+            <nav class="navbar-nav navbar-userbar hidden-xs hidden-sm " style="top: 0;">
+                <ul class="cl">
+                    <li class="userInfo dropDown dropDown_hover" th:if="${session.user}==null">
+                        <a href="login" ><img class="avatar size-S" src="static/img/tologin.png" title="登入">登入</a>
+                    </li>
+                    <li class="userInfo dropDown dropDown_hover" th:if="${session.user}!=null">
+                        <span>欢迎您! </span>
+                        <img class="avatar size-S" th:src="${session.user.getImg()}" title="头像"><a href="#" th:text="${session.user.name}"></a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</header>
+
+
+<!--导航条-->
+<nav class="breadcrumb">
+    <div class="container"> <i class="Hui-iconfont">&#xe67f;</i> <a href="index.html" class="c-primary">首页</a> <span class="c-gray en">&gt;</span>  <span class="c-gray">发表文章</span> </div>
+</nav>
+<section class="container">
+    <div class="col-xs-12 col-md-10 col-md-offset-1 mt-20">
+        <!--用于评论-->
+        <div class="mt-20" id="ct">
+            <div id="err" class="Huialert Huialert-danger hidden radius">成功状态提示</div>
+            <span class="tits">文章标题:</span><input id="titinput" type="text" placeholder="文章标题" />
+            <span class="tits">文章分类:</span>
+            <select id="type">
+                <option id="1">-----</option>
+                <option id="2">Java</option>
+                <option id="3">程序人生</option>
+                <option id="4">建站</option>
+                <option id="5">杂谈</option>
+            </select>
+            <script id="editor" type="text/plain" name="gdesc" style="width:100%;height:350px;"></script>
+            <div class="text-r mt-10">
+                <button id="publish" class="btn btn-primary radius" > 确认发表文章</button>
+            </div>
+        </div>
+
+        <div class="line"></div>
+
+    </div>
+</section>
+<footer class="footer mt-20">
+    <div class="container-fluid" id="foot">
+        <p>Copyright &copy; 2016-2017 www.wfyvv.com <br>
+            <a href="#" target="_blank">皖ICP备17002922号</a>  更多模板：<a href="http://www.mycodes.net/" target="_blank">源码之家</a><br>
+        </p>
+    </div>
+</footer>
+<script type="text/javascript" src="static/plugin/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="static/plugin/layer/3.0/layer.js"></script>
+<script type="text/javascript" src="static/plugin/h-ui/js/H-ui.min.js"></script>
+<script type="text/javascript" src="static/plugin/pifu/pifu.js"></script>
+<script type="text/javascript" src="static/js/common.js"></script>
+<script> $(function(){ $(window).on("scroll",backToTopFun); backToTopFun(); }); </script>
+<script type="text/javascript">
+    //实例化编辑器
+    var ue = UE.getEditor('editor',{
+        toolbars: [
+        [
+            'undo', //撤销
+            'bold', //加粗
+            'formatmatch', //格式刷
+            'underline', //下划线
+            'insertcode', //代码语言
+            'preview', //预览
+            'horizontal', //分隔线
+            'inserttitle', //插入标题
+            'cleardoc', //清空文档
+            'fontfamily', //字体
+            'fontsize', //字号
+            'paragraph', //段落格式
+            'simpleupload', //单图上传
+            'insertimage', //多图上传
+            'attachment', //附件
+            'music', //音乐
+            'inserttable', //插入表格
+            'emotion', //表情
+            'insertvideo', //视频
+            'justifyleft', //居左对齐
+            'justifyright', //居右对齐
+            'justifycenter', //居中对
+            'justifyjustify', //两端对齐
+            'forecolor', //字体颜色
+            'fullscreen', //全屏
+            'edittip ', //编辑提示
+            'customstyle', //自定义标题
+            'template', //模板
+        ]
+    ]
+    });
+
+
+    $("#publish").on("click",function () {
+        if($("#titinput").val().trim()==null || $("#titinput").val().trim()=="" || UE.getEditor('editor').getContent().trim()==null || UE.getEditor('editor').getContent().trim()=="" || $("#type").val()=="-----"){
+            layer.msg("内容不能为空!")
+            return;
+        }
+
+        $.ajax({
+            url:"util/publish",
+            dataType:"text",
+            type:"post",
+            data:{
+                tittle:$("#titinput").val(),
+                content:UE.getEditor('editor').getContent(),
+                type:$("#type").val()
+            },
+            success:function (data) {
+                layer.msg(data)
+                if(data=="发表成功!"){
+                    setTimeout(function () {
+                        window.location.href="index"
+                    },1000)
+                }
+            }
+        })
+    })
+</script>
+</body>
+</html>

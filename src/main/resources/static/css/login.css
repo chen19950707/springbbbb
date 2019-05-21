@@ -1,0 +1,178 @@
+#lbody{
+    width: 400px;
+    height: 500px;
+    margin: 100px auto;
+    border: 1px solid green;
+    border-radius: 20px;
+    background-color: whitesmoke;
+    text-align: center;
+    position: relative;
+}
+#llogin{
+    margin-top: 20px;
+    width: 100px;
+    height: 60px;
+}
+#lbody table{
+    border: none;
+}
+#lbody tr{
+    height: 80px
+}
+#lbody td:first-child{
+    text-align: center;
+    vertical-align: center;
+    width: 150px;
+    font-size: 20px
+}
+#lbody td:nth-child(2){
+    text-align: left;
+}
+#lbody td:nth-child(2) input{
+    height: 30px;
+    border: 1px solid black;
+    width: 200px;
+    text-indent: 10px;
+    border-radius: 15px;
+}
+
+#lbody tr:nth-child(3) td:nth-child(2) input{
+    width: 100px;
+}
+#savepwd{
+    top: 355px;
+    left: 290px;
+}
+#lbutton{
+    margin-top: 20px;
+    border: none;
+    width: 150px;
+    height: 50px;
+    background-color: #5bc0de;
+    color: black;
+    font-size: 30px;
+    border-radius: 25px;
+}
+#lbutton:hover{
+    cursor: pointer;
+}
+#ologin{
+    margin: 20px auto;
+    width: 350px;
+    border-top: 1px solid #9c9c9c;
+}
+#ologin img{
+    width: 50px;
+    margin: 10px;
+}
+#ologin img:hover{
+    cursor: pointer;
+}
+#tucode{
+    margin-left: 10px;
+}
+#nametip{
+    position: absolute;
+    top: 140px;
+    left: 170px;
+    color: red;
+    display: none;
+}
+#codetip{
+    position: absolute;
+    top:300px;
+    left: 170px;
+    color: red;
+    display: none;
+}
+
+
+#rbody{
+    margin: 50px auto;
+    width: 700px;
+    height: 700px;
+    border: 1px solid green;
+    border-radius: 20px;
+    background-color: white;
+    text-align: center;
+}
+#reimg{
+    width: 100px;
+    height: 60px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+#rbody tr{
+    height: 80px;
+    position: relative;
+}
+#rbody table{
+    margin: 0 auto;
+    width: 600px;
+}
+#rbody td:first-child{
+    font-size: 20px;
+    width: 100px;
+}
+#rbody td:nth-child(2){
+    width: 200px;
+}
+
+#rbody td input{
+    border: 1px solid black;
+    width: 300px;
+    height: 30px;
+    font-size: 15px;
+    border-radius: 15px;
+    text-indent: 10px;
+}
+#rbody td button{
+    cursor: pointer;
+    width: 130px;
+    height: 30px;
+    border: none;
+    border-radius: 15px;
+    font-size: 15px;
+    background-color: #5bc0de;
+}
+#rbody td span{
+    position: absolute;
+    color: red;
+    top: 30px;
+    left: 450px;
+    display: none;
+}
+#rbutton{
+    cursor: pointer;
+    width: 150px;
+    height: 50px;
+    border: none;
+    font-size: 20px;
+    background-color: #5bc0de;
+}
+
+.tits{
+    font-size: 20px;
+    position: relative;
+    top: -10px;
+    margin-left: 30px;
+}
+#titinput{
+    width: 300px;
+    border: none;
+    height: 30px;
+    margin-left: 20px;
+    margin-bottom: 30px;
+}
+#ct{
+    line-height: 30px;
+}
+
+#type{
+    position: relative;
+    top: -10px;
+    left: 30px;
+    height: 20px;
+
+}
